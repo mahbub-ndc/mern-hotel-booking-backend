@@ -1,3 +1,5 @@
+import { BookingType } from "../Bookings/booking.interface";
+
 export type HotelType = {
   _id: string;
   userId: string;
@@ -11,6 +13,7 @@ export type HotelType = {
   facilities: string[];
   pricePerNight: number;
   rating: number;
-  imageUrls: object[];
+  imageUrls: string[];
   lastUpdated: Date;
+  bookings: BookingType[];
 };

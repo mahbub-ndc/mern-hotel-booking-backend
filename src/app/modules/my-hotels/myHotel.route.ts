@@ -39,10 +39,7 @@ router.post(
       const uploadedImages = await Promise.all(uploadPromises);
 
       // Format the image data for MongoDB
-      const imageUrls = uploadedImages.map((image) => ({
-        url: image.secure_url,
-        public_id: image.public_id,
-      }));
+      const imageUrls = uploadedImages.map((image) => image.secure_url);
 
       newHotel.imageUrls = imageUrls;
 
@@ -80,6 +77,30 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch hotels",
+      error: err,
+    });
+  }
+});
+
+router.get("/:id", verifyToken, async (req: Request, res: Response) => {
+  const id = req.params.id.toString();
+  try {
+    const hotel = await Hotel.findOne({ _id: id, userId: req.userId });
+    // if (!hotel) {
+    //   return res.status(404).json({
+    //     success: false,
+    //     message: "Hotel not found",
+    //   });
+    // }
+    res.status(200).json({
+      success: true,
+      message: "Hotel fetched successfully",
+      data: hotel,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch hotel",
       error: err,
     });
   }
