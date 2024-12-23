@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { User } from "../user/user.model";
 import bcrypt from "bcrypt";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import config from "../../config";
 import verifyToken from "../../middlware/verifyToken";
 
@@ -42,9 +42,11 @@ router.post("/login", async (req: Request, res: Response) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: "none",
     });
+
+    console.log(token);
 
     res.status(200).json({
       message: "User logged in successfully",
@@ -58,7 +60,6 @@ router.post("/login", async (req: Request, res: Response) => {
     });
   }
 });
-
 router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
@@ -69,7 +70,14 @@ router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
 
 router.post("/logout", async (req: Request, res: Response) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      expires: new Date(0),
+      // httpOnly: true,
+      //secure: process.env.NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
+    });
+
     res.status(200).json({
       message: "User logged out successfully",
     });

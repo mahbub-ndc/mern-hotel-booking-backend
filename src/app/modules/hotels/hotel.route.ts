@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import express, { Request, Response } from "express";
 import { Hotel } from "../my-hotels/myHotel.model";
 import Stripe from "stripe";
@@ -24,7 +26,7 @@ router.get("/search", async (req, res) => {
         break;
     }
 
-    const pageSize = 2;
+    const pageSize = 3;
     const pageNumber = parseInt(
       req.query.page ? req.query.page.toString() : "1"
     );
@@ -168,7 +170,7 @@ router.get("/", async (req, res) => {
 });
 
 const constructSearchQuery = (queryParams: any) => {
-  let constructedQuery: any = {};
+  const constructedQuery: any = {};
 
   if (queryParams.destination) {
     constructedQuery.$or = [
@@ -210,7 +212,7 @@ const constructSearchQuery = (queryParams: any) => {
       ? queryParams.stars.map((star: string) => parseInt(star))
       : parseInt(queryParams.stars);
 
-    constructedQuery.starRating = { $in: starRatings };
+    constructedQuery.starRating = { $in: [starRatings] };
   }
 
   if (queryParams.maxPrice) {

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../config";
-import { NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 
 declare global {
   namespace Express {
@@ -10,8 +11,9 @@ declare global {
   }
 }
 
-const verifyToken = (req: any, res: any, next: NextFunction) => {
+const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.token;
+  // console.log("token", token);
   if (!token) {
     res.status(401).json({
       message: "Token is missing",

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 // Upload an image
